@@ -203,64 +203,88 @@ describe('Bij een niet-bestaande user id wordt een passende foutmelding geretour
   });
 });
 
-/*
-describe('UC-202-2 Opvragen van overzicht van users', () => {
-    it('TC-202-1 - Toon alle gebruikers, minimaal 2', (done) => {
-        // Voer de test uit
-        chai
-            .request(server)
+describe('Update user', () => {
+  const existingUserId = 1; // replace with an existing user ID in your database
+  const nonExistingUserId = 999; // replace with a non-existing user ID in your database
+
+  it('should update an existing user and return the updated user data', (done) => {
+    const updatedUser = {
+      firstName: 'John34',
+      lastName: 'Doe34',
+      email: 'john3.doe4@example.com'
+    };
+
+    chai.request(app)
+      .put(`/api/user/${existingUserId}`)
+      .send(updatedUser)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql(`User with ID ${existingUserId} updated successfully`);
+        res.body.should.have.property('data');
+        res.body.data.should.have.property('id').eql(existingUserId);
+        res.body.data.should.have.property('firstName').eql(updatedUser.firstName);
+        res.body.data.should.have.property('lastName').eql(updatedUser.lastName);
+        res.body.data.should.have.property('email').eql(updatedUser.email);
+        
+        chai.request(app)            
             .get('/api/user')
             .end((err, res) => {
-                assert(err === null);
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                //res.body.should.have.property('id').eql(existingUserId);
+                let { data, message } = res.body;
+                
+                const user = data.find(user => user.id === existingUserId);
+                console.log(user)
+                });
+        
+        done();
+      });
+  });
 
-                res.body.should.be.an('object');
-                let {
-                    data,
-                    message,
-                    status
-                } = res.body;
+  it('should return an appropriate error message for a non-existing user id', (done) => {
+    const updatedUser = {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com'
+    };
 
-                status.should.equal(200);
-                message.should.be.a('string').equal('User getAll endpoint');
-
-                // Je kunt hier nog testen dat er werkelijk 2 userobjecten in het array zitten.
-                // Maarrr: omdat we in een eerder test een user hebben toegevoegd, bevat
-                // de database nu 3 users...
-                // We komen hier nog op terug.
-                data.should.be.an('array').that.has.length(3);
-
-                done();
-            });
-    });
-
-    // Je kunt een test ook tijdelijk skippen om je te focussen op andere testcases.
-    // Dan gebruik je it.skip
-    it.skip('TC-202-3 - Toon gebruikers met zoekterm op niet-bestaande velden', (done) => {
-        // Voer de test uit
-        chai
-            .request(server)
-            .get('/api/user')
-            .query({
-                name: 'foo',
-                city: 'non-existent'
-            })
-            // Is gelijk aan .get('/api/user?name=foo&city=non-existent')
-            .end((err, res) => {
-                assert(err === null);
-
-                res.body.should.be.an('object');
-                let {
-                    data,
-                    message,
-                    status
-                } = res.body;
-
-                status.should.equal(200);
-                message.should.be.a('string').equal('User getAll endpoint');
-                data.should.be.an('array');
-
-                done();
-            });
-    });
+    chai.request(app)
+      .put(`/api/user/${nonExistingUserId}`)
+      .send(updatedUser)
+      .end((err, res) => {
+        res.should.have.status(404);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql(`User with ID ${nonExistingUserId} not found`);
+        done();
+      });
+  });
 });
-*/
+
+
+describe('DELETE /api/user/:id', () => {
+  // Test for deleting an existing user
+  it('should delete a user with a valid ID', (done) => {
+    const userId = 0; // replace with an existing user ID in your database
+    chai.request(app)
+      .delete(`/api/user/${userId}`)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equal(`User with ID ${userId} deleted successfully`);
+        done();
+      });
+  });
+
+  // Test for attempting to delete a non-existent user
+  it('should return an error message with a non-existent ID', (done) => {
+    const userId = 999; // replace with a non-existent user ID in your database
+    chai.request(app)
+      .delete(`/api/user/${userId}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal(`User with ID ${userId} not found`);
+        done();
+      });
+  });
+});

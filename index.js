@@ -136,6 +136,59 @@ app.get('/api/user', (req, res) => {
   });
 });
 
+
+function updateUserById(id, updatedUser) {
+  const userIndex = database.users.findIndex(user => user.id === id);
+  if (userIndex === -1) {
+    // If no user with the given ID is found, return null
+    return null;
+  }
+  // Update the user object in the array with the new data
+  database.users[userIndex] = {
+    ...database.users[userIndex],
+    ...updatedUser
+  };
+  // Return the updated user object
+  return database.users[userIndex];
+}
+
+app.put('/api/user/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const updatedUser = req.body;
+  const user = updateUserById(id, updatedUser);
+  if (user === null) {
+    const statusCode = 404;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: `User with ID ${id} not found`
+    });
+  } else {
+    const statusCode = 200;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: `User with ID ${id} updated successfully`,
+      data: user
+    });
+  }
+});
+
+app.delete('/api/user/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = database.users.findIndex((user) => user.id === id);
+
+  if (index !== -1) {
+    database.users.splice(index, 1);
+    res.status(200).json({
+      message: `User with ID ${id} deleted successfully`,
+    });
+  } else {
+    res.status(404).json({
+      message: `User with ID ${id} not found`,
+    });
+  }
+});
+
+
 // Wanneer geen enkele endpoint matcht kom je hier terecht. Dit is dus
 // een soort 'afvoerputje' (sink) voor niet-bestaande URLs in de server.
 app.use('*', (req, res) => {
