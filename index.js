@@ -24,6 +24,22 @@ app.use('*', (req, res, next) => {
   next();
 });
 
+// app.get('api/user', (req, res)=> {
+
+//   const queryField = Object.entries(req.query);
+
+//   if(queryField.length == 2){
+//     console.log(`Dit is field1 = ${queryField[0] [0]} == ${queryField [0] [1]}`);
+
+//     res.status(200).json({
+//       status: 200,
+//       message: `gefilterd op twee parameters`,
+//       data: {},
+//     });
+//   }else if{}
+//   }
+// })
+
 // Info endpoints
 
 // function updateUserById(id, updatedUser) {

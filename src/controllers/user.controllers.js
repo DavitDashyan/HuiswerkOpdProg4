@@ -1,3 +1,4 @@
+const dbconnection = require('../../dbconnection')
 const assert = require('assert');
 
 let database = {
@@ -147,14 +148,48 @@ let controller = {
       data: user
     });
   },
-  getAllUsers: (req, res) => {
-    // er moet precies 1 response verstuurd worden.
-    const statusCode = 200;
-    res.status(statusCode).json({
-      status: statusCode,
-      message: 'User getAll endpoint',
-      data: database.users
-    });
+
+  getAllUsers: (req, res, next) => {
+
+    dbconnection.getConnection(function (err, connection) {
+        if (err) throw err; // not connected!
+      
+        // Use the connection
+        connection.query(
+          'SELECT id, name FROM meal;',
+          function (error, results, fields) {
+            // When done with the connection, release it.
+            connection.release();
+      
+            // Handle error after the release.
+            if (error) throw error;
+      
+            // Don't use the connection here, it has been returned to the pool.
+            console.log('#results = ', results.length);
+            res.status(200).json({
+            statusCode: 200,
+            results: results
+        })
+
+
+            // pool.end((err) => {
+            //   console.log('pool was closed');
+            // })
+          }
+        )
+      })
+//kan weg als de in dbconnection uit de comments komen (get all kan dan weg)
+
+
+//   },
+//   getAllUsers: (req, res) => {
+//     // er moet precies 1 response verstuurd worden.
+//     const statusCode = 200;
+//     res.status(statusCode).json({
+//       status: statusCode,
+//       message: 'User getAll endpoint',
+//       data: database.users
+//     });
   },
   getAllMeals: (req, res) => {
     // er moet precies 1 response verstuurd worden.
