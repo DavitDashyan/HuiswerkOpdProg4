@@ -294,8 +294,8 @@ describe('Bij een niet-bestaande user id wordt een passende foutmelding geretour
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
-        let { data, message } = res.body;
-        const user = data.find((user) => user.id === nonExistingUserId);
+        let { status, results } = res.body;
+        const user = results.find((user) => user.id === nonExistingUserId);
         expect(user).to.be.undefined;
         done();
       });
@@ -340,9 +340,9 @@ describe('Update user', () => {
             res.should.have.status(200);
             res.body.should.be.a('object');
             //res.body.should.have.property('id').eql(existingUserId);
-            let { data, message } = res.body;
+            let { status, results } = res.body;
 
-            const user = data.find((user) => user.id === existingUserId);
+            const user = results.find((user) => user.id === existingUserId);
             console.log(user);
           });
 
