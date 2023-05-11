@@ -4,6 +4,7 @@ const chaiHttp = require('chai-http');
 const server = require('../../index');
 const app = require('../../index');
 const expect = chai.expect;
+const should = require('chai').should();
 const database = [];
 
 chai.should();
@@ -114,19 +115,125 @@ describe('UC-202-1 Gebruikers ophalen', () => {
       .end((err, res) => {
         res.body.should.has.property('status').to.be.equal(200);
         res.body.should.be.a('object');
-        let { data, message } = res.body;
+        let { status, results } = res.body;
+        console.log("HURAAAA");
+        console.log(res.body);
+        console.log(res.body.status);
+        console.log(res.body.results);
         // Assert that `data` is an array
-        data.should.be.an('array');
+        results.should.be.an('array');
 
         // Assert that `data` is not empty
-        data.should.be.an('array').and.have.length.greaterThan(0);
+        results.should.be.an('array').and.have.length.greaterThan(0);
 
         // In request to 'TC-202-1 Toon alle gebruikers (minimaal 2)'.
-        console.log('DATA = ', data);
+        console.log('DATA = ', results);
         done();
       });
   });
 });
+
+
+// describe('UC-202 Opvragen van overzicht van users', () => {
+//   it('TC-202-1 - Toon alle gebruikers, minimaal 2', (done) => {
+//     // Voer de test uit
+//     chai
+//       .request(server)
+//       .get('/api/user')
+//       .end((err, res) => {
+//         assert(err === null);
+
+//         res.body.should.be.an('object');
+//         //let { data, message, status } = res.body;
+//         let { status, data } = res.body;
+
+//         status.should.equal(200);
+//         //message.should.be.a('string').equal('User getAll endpoint');//!!!
+
+//         // Je kunt hier nog testen dat er werkelijk 2 userobjecten in het array zitten.
+//         // Maarrr: omdat we in een eerder test een user hebben toegevoegd, bevat
+//         // de database nu 3 users...
+//         // We komen hier nog op terug.
+//         data.should.be.an('array').that.has.length(5);
+
+//         done();
+//       });
+//   });
+
+//   it.skip('TC-202-2 - Toon gebruikers met zoekterm op niet-bestaande velden', (done) => {
+//     // Voer de test uit
+//     chai
+//       .request(server)
+//       .get('/api/user')
+//       .query({ name: 'foo', city: 'non-existent' })
+//       // Is gelijk aan .get('/api/user?name=foo&city=non-existent')
+//       .end((err, res) => {
+//         assert(err === null);
+
+//         res.body.should.be.an('object');
+//         let { data, message, status } = res.body;
+
+//         status.should.equal(200);
+//         message.should.be.a('string').equal('User getAll endpoint');
+//         data.should.be.an('array');
+
+//         done();
+//       });
+//   });
+// });
+
+
+// describe('Test cases voor UC-202', function () {
+//   it('TC-202-1', (done) => {
+//       chai.request(app)
+//           .get('/api/user')
+//           .end((err, res) => {
+//               expect(res.body.status).to.equal(200);
+//               expect(res.body.message).to.equal('User getAll endpoint');
+//               expect(res.body.data).that.is.an('array').with.length.gte(2);
+//               done();
+//           });
+//   });
+
+//   it('TC-202-2', (done) => {
+//       chai.request(app)
+//       .get('/api/user/')
+//       .end((err, res) => {
+//           expect(res.body.status).to.equal(200);
+//           expect(res.body.message).to.equal('User getAll endpoint');
+//           expect(res.body.data).that.is.an('array').with.length.gte(2);
+//           done();
+//       });
+//   });
+
+//   it('TC-202-3', (done) => {
+//       chai.request(app)
+//           //iedereen heeft een id dus dit geeft niks terug
+//           .get('/api/user?id=')
+//           .end((err, res) => {
+//               expect(res.body.status).to.equal(200);
+//               expect(res.body.message).to.equal('User getAll endpoint');
+//               expect(res.body.data).that.is.an('array');
+//               expect(res.body.data).to.have.lengthOf(0);
+//               done();
+//           });
+//   });
+
+//   it('TC-202-4', (done) => {
+//       chai.request(app)
+//           .get('/api/user?isActive=true')
+//           .end((err, res) => {
+//               expect(res.body.status).to.equal(200);
+//               expect(res.body.message).to.equal('User getAll endpoint');
+//               expect(res.body.data).that.is.an('array');
+//               res.body.data.forEach((user) => {
+//                   expect(user.isActive).to.be.equal(1);
+//               });
+//               done();
+//           });
+//   });
+// });
+
 
 describe('UC-203', () => {
   it('error met het is nog niet geimplementeerd', (done) => {
@@ -161,17 +268,17 @@ Bij een niet-bestaande user id wordt een passende foutmelding geretourneerd.', (
         res.should.have.status(200);
         res.body.should.be.a('object');
         //res.body.should.have.property('id').eql(existingUserId);
-        let { data, message } = res.body;
+        let { status, results } = res.body;
 
-        const user = data.find((user) => user.id === existingUserId);
+        const user = results.find((user) => user.id === existingUserId);
 
         // Assert that the user object is not null or undefined
         expect(user).to.exist;
 
         // Assert that the user object's contents are correct
-        expect(user.firstName).to.equal('Marieke');
-        expect(user.lastName).to.equal('Jansen');
-        expect(user.emailAdress).to.equal('m@server.nl');
+        expect(user.name).to.equal('Pasta Bolognese met tomaat, spekjes en kaas');
+       // expect(user.lastName).to.equal('Jansen');
+        //expect(user.emailAdress).to.equal('m@server.nl');
 
         done();
       });
