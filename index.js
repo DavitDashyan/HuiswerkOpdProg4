@@ -1,8 +1,9 @@
 const express = require('express');
 const logger = require('./src/util/utils').logger;
 const userRoutes = require('./src/routes/user.routes');
+require('dotenv').config()
 const app = express();
-const port = process.env.PORT || 7645;
+const port = process.env.PORT 
 
 // const bodyParser = require ('body-parser');
 // router.use(bodyParser.json());
@@ -25,20 +26,20 @@ app.use('*', (req, res, next) => {
 
 // Info endpoints
 
-function updateUserById(id, updatedUser) {
-  const userIndex = database.users.findIndex(user => user.id === id);
-  if (userIndex === -1) {
-    // If no user with the given ID is found, return null
-    return null;
-  }
-  // Update the user object in the array with the new data
-  database.users[userIndex] = {
-    ...database.users[userIndex],
-    ...updatedUser
-  };
-  // Return the updated user object
-  return database.users[userIndex];
-}
+// function updateUserById(id, updatedUser) {
+//   const userIndex = database.users.findIndex(user => user.id === id);
+//   if (userIndex === -1) {
+//     // If no user with the given ID is found, return null
+//     return null;
+//   }
+//   // Update the user object in the array with the new data
+//   database.users[userIndex] = {
+//     ...database.users[userIndex],
+//     ...updatedUser
+//   };
+//   // Return the updated user object
+//   return database.users[userIndex];
+// }
 
 // Wanneer geen enkele endpoint matcht kom je hier terecht. Dit is dus
 // een soort 'afvoerputje' (sink) voor niet-bestaande URLs in de server.
@@ -53,12 +54,18 @@ app.use('*', (req, res) => {
 
 // Express error handler
 app.use((err, req, res, next) => {
-  logger.error(err.code, err.message);
-  res.status(err.code).json({
-    statusCode: err.code,
-    message: err.message,
-    data: {}
-  });
+  console.log("i am here");
+// logger.error(err.code, err.message);
+  //  console.log(res);
+  //  console.log("end of imhere");
+   res.status(err.status).json(err);
+// res.status(err.code).json({
+  //   statusCode: err.code,
+  //   message: err.message,
+  //   data: {}
+  
+  // });
+  // next();
 });
 
 // Start de server

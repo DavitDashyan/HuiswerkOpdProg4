@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 let database = {
   users: [
     {
@@ -17,8 +19,16 @@ let database = {
   ],
   meals: [
     {
-      id: 11,
+      id: 0,
       name: 'kaas'
+    },
+    {
+      id: 1,
+      name: 'brood'
+    },
+    {
+      id: 2,
+      name: 'melk'
     }
   ]
 };
@@ -28,6 +38,35 @@ let database = {
 let index = database.users.length;
 
 let controller = {
+  validateUser: (req, res, next) => {
+    let user = req.body;
+    let { emailAdress, firstName, lastName } = user;
+
+    try {
+      assert(typeof emailAdress === 'string', 'must be a string');
+      assert(typeof firstName === 'string', 'must be a string');
+      assert(typeof lastName === 'string', 'must be a string');
+      next();
+    } catch (err) {
+      const error = {
+        status: 400,
+        result: err.message,
+        error: err.message
+      };
+
+      // console.log("I<N validate");
+      console.log(err.code);
+      // console.log("IN validate>");
+      // console.log(err.code);
+      // console.log(err.message);
+      // res.status(400).json({
+      //   status: 400,
+      //   result: err.toString()
+      // });
+
+      next(error);
+    }
+  },
   userInfo: (req, res) => {
     res.status(201).json({
       status: 201,
@@ -44,6 +83,7 @@ let controller = {
     // In de komende lessen gaan we testen of dat werkelijk zo is.
 
     const user = req.body;
+    console.log('add register');
 
     // Validate the incoming data
     if (!user.emailAdress) {
@@ -113,13 +153,40 @@ let controller = {
     res.status(statusCode).json({
       status: statusCode,
       message: 'User getAll endpoint',
-      data: database.users``
+      data: database.users
     });
+  },
+  getAllMeals: (req, res) => {
+    // er moet precies 1 response verstuurd worden.
+    const statusCode = 200;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: 'User getAll endpoint',
+      data: database.meals
+    });
+  },
+  updateUserById: (id, updatedUser) => {
+    console.log("updateuserbyid");
+    const userIndex = database.users.findIndex(user => user.id === id);
+    if (userIndex === -1) {
+      // If no user with the given ID is found, return null
+      console.log("return null");
+      return null;
+    }
+    // Update the user object in the array with the new data
+    database.users[userIndex] = {
+      ...database.users[userIndex],
+      ...updatedUser
+    };
+    console.log("return datauser");
+    // Return the updated user object
+    return database.users[userIndex];
   },
   userPut: (req, res) => {
     const id = parseInt(req.params.id);
     const updatedUser = req.body;
-    const user = updateUserById(id, updatedUser);
+    console.log("userPut");
+    const user = controller.updateUserById(id, updatedUser);
     if (user === null) {
       const statusCode = 404;
       res.status(statusCode).json({
@@ -149,6 +216,52 @@ let controller = {
       res.status(404).json({
         message: `User with ID ${id} not found`
       });
+    }
+  },
+  getUserById: (req, res, next) => {
+    const userId = req.params.id;
+    console.log(`GET USER ID after id=  ${userId}`);
+    let user = database.users.filter((item) => item.id == userId);
+    //console.log("AFTER is and user");
+    if (user.length > 0) {
+      // console.log("GET USER ID start");
+      console.log(user);
+      res.status(200).json({
+        status: 200,
+        result: user
+      });
+    } else {
+      //   console.log("ERROR in GET USER ID ");
+      const error = {
+        status: 404,
+        result: `with id ${userId} not found`
+      };
+      console.log(error);
+      //    console.log("ERROR after log");
+      next(error);
+    }
+  },
+  getMealById: (req, res, next) => {
+    const mealId = req.params.id;
+    console.log(`GET MEAL ID after id=  ${mealId}`);
+    let meal = database.meals.filter((item) => item.id == mealId);
+    //console.log("AFTER is and user");
+    if (meal.length > 0) {
+      // console.log("GET USER ID start");
+      console.log(meal);
+      res.status(200).json({
+        status: 200,
+        result: meal
+      });
+    } else {
+      //   console.log("ERROR in GET USER ID ");
+      const error = {
+        status: 404,
+        result: `with id ${mealId} not found`
+      };
+      console.log(error);
+      //    console.log("ERROR after log");
+      next(error);
     }
   }
 };
