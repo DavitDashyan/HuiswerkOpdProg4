@@ -258,7 +258,7 @@ describe('UC-203', () => {
 /**********************/
 
 describe('UC-204 Bij een bestaande user id wordt de juiste user uit de database geretourneerd. \
-Bij een niet-bestaande user id wordt een passende foutmelding geretourneerd.', () => {
+Bij een niet-bestaande user id wordt een passende foutmelding geretourneerd', () => {
   it('TC-204-1 - Bestaande user id', (done) => {
     const existingUserId = 1;
     chai
