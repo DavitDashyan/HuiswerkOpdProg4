@@ -17,9 +17,9 @@ jobs:
       DB_PASSWORD: root
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         ports:
-          - '3306'
+          - 3306
     steps:
       - uses: actions/checkout@main
 
@@ -34,6 +34,10 @@ jobs:
         run: |
           mysql -uroot -p${{env.MYSQL_ROOT_PASSWORD}} ${{env.DB_DATABASE}} < share-a-meal.sql
           mysql -uroot -p${{env.MYSQL_ROOT_PASSWORD}} ${{env.DB_DATABASE}} -e "SHOW TABLES;"
+
+      # - name: Install Mocha
+      #   run: |
+      #     npm install --global mocha
 
       - name: npm install
         run: |
