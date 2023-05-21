@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 describe('Login API', () => {
   describe('POST /login', () => {
-    it('should return 400 if required field is missing', (done) => {
+    it('TC-101-1: return 400 if required field is missing', (done) => {
       chai
         .request(app)
         .post('/api/login')
@@ -20,7 +20,7 @@ describe('Login API', () => {
         });
     });
 
-    it('should return 404 if password is not valid', (done) => {
+    it('TC-101-2: should return 400 if password is not valid', (done) => {
       chai
         .request(app)
         .post('/api/login')
@@ -29,14 +29,14 @@ describe('Login API', () => {
           password: 'wrongpassword'
         })
         .end((err, res) => {
-          expect(res).to.have.status(404);
+          expect(res).to.have.status(400);
           expect(res.body.message).to.equal('User not found or password invalid');
           expect(res.body.data).to.deep.equal({});
           done();
         });
     });
 
-    it('should return 404 if user does not exist', (done) => {
+    it('TC-101-3: should return 404 if user does not exist', (done) => {
       chai
         .request(app)
         .post('/api/login')
@@ -52,7 +52,7 @@ describe('Login API', () => {
         });
     });
 
-    it('should return 200 with user info and token if login is successful', (done) => {
+    it('TC-101-4: should return 200 with user info and token if login is successful', (done) => {
       chai
         .request(app)
         .post('/api/login')
@@ -62,7 +62,7 @@ describe('Login API', () => {
         })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.statusCode).to.equal(200);
+          expect(res.body.status).to.equal(200);
           expect(res.body.results).to.have.property('id');
           expect(res.body.results).to.have.property('firstName');
           expect(res.body.results).to.have.property('lastName');

@@ -8,59 +8,12 @@ let database = [];
 let addedUserId = 0;
 const { assert } = chai;
 
-//const request = require('supertest');
 
-//const sinon = require('sinon');
 
 chai.should();
 chai.use(chaiHttp);
-
-// describe('Manage users', () => {
-//   describe('UC 201 add user /api/', () => {
-//     beforeEach((done) => {
-//       database = [];
-//       done();
-//     });
-//     it('when a request input is missing, a valid error should be returned', (done) => {
-//       chai
-//         .request(server)
-//         .post('/api/user')
-//         .send({
-//           //firstName ontbreekt
-//           lastName: 'VanDeSpek',
-//           emailAdress: 'keesVanDeSpek@gmail.com'
-//         })
-//         .end((err, res) => {
-//              res.body.should.has.property('status').to.be.equal(400);
-//           //   res.body.should.have.property('error');
-//           res.body.should.be.a('object');
-//           let { status, result } = res.body;
-//           status.should.equal(400);
-//           res.should.be.a('string').that.equal('must be a string');
-//           done();
-//         });
-//     });
-//   });
-// });
-
 // Testen voor UC-201: Registreren als nieuwe gebruiker
 describe('test uc-201 t/m 206', () => {
-  // // Voordat de tests worden uitgevoerd, start de server en voer eventuele voorbereidende taken uit
-  // before((done) => {
-  //   server.listen(3000, () => {
-  //     // Voer eventuele voorbereidende taken uit, zoals het verwijderen van gebruikers uit de database (optioneel)
-  //     done();
-  //   });
-  // });
-
-  // Na het uitvoeren van de tests, stop de server en voer eventuele opruimtaken uit
-  // after((done) => {
-  //   server.close(() => {
-  //     // Voer eventuele opruimtaken uit, zoals het herstellen van de database naar de oorspronkelijke staat (optioneel)
-  //     done();
-  //   });
-  // });
-
   // TC-201-1: Verplicht veld ontbreekt
   it('TC-201-1: should return a 400 error when a required field is missing', (done) => {
     const user = {
@@ -86,9 +39,6 @@ describe('test uc-201 t/m 206', () => {
         res.body.should.have.property('message', 'firstName is missing');
         res.body.should.have.property('data');
         res.body.data.should.be.an('object');
-
-        // Verifieer eventueel andere eigenschappen van de response data
-
         done();
       });
   });
@@ -117,9 +67,6 @@ describe('test uc-201 t/m 206', () => {
         res.body.should.have.property('message', 'Invalid emailAddress');
         res.body.should.have.property('data');
         res.body.data.should.be.an('object');
-
-        // Verifieer eventueel andere eigenschappen van de response data
-
         done();
       });
   });
@@ -148,9 +95,6 @@ describe('test uc-201 t/m 206', () => {
         res.body.should.have.property('message', 'Invalid password');
         res.body.should.have.property('data');
         res.body.data.should.be.an('object');
-
-        // Verifieer eventueel andere eigenschappen van de response data
-
         done();
       });
   });
@@ -179,8 +123,6 @@ describe('test uc-201 t/m 206', () => {
         res.body.should.have.property('message', 'Email address bestaat al');
         res.body.should.have.property('data');
         res.body.data.should.be.an('object');
-        // Verifieer eventueel andere eigenschappen van de response data
-
         done();
       });
   });
@@ -227,101 +169,7 @@ describe('test uc-201 t/m 206', () => {
       });
   });
 
-  // describe('UC-206: Verwijderen van gebruiker', () => {
-  //   // TC-206-1: Gebruiker bestaat niet
-  //   it('should return a 404 error when the user does not exist', (done) => {
-  //     const userId = 12345; // Gebruiker ID die niet bestaat
-
-  //     chai
-  //       .request(server)
-  //       .delete(`/api/user/${userId}`)
-  //       .end((err, res) => {
-  //         res.should.have.status(404);
-  //         res.body.should.be.an('object');
-  //         res.body.should.have.property('status', 404);
-  //         res.body.should.have.property('message', 'User not found');
-  //         res.body.should.have.property('data');
-  //         res.body.data.should.be.an('object');
-
-  //         // Verifieer eventueel andere eigenschappen van de response data
-
-  //         done();
-  //       });
-  //   });
-
-  //   // TC-206-2: Gebruiker is niet ingelogd
-  //   // it('should return a 401 error when the user is not logged in', (done) => {
-  //   //   const userId = 87; // Bestaand gebruiker ID
-
-  //   //   chai
-  //   //     .request(server)
-  //   //     .delete(`/api/user/${userId}`)
-  //   //     .end((err, res) => {
-  //   //       res.should.have.status(401);
-  //   //       res.body.should.be.an('object');
-  //   //       res.body.should.have.property('status', 401);
-  //   //       res.body.should.have.property('message', 'User is not logged in');
-  //   //       res.body.should.have.property('data');
-  //   //       res.body.data.should.be.an('object');
-
-  //   //       // Verifieer eventueel andere eigenschappen van de response data
-
-  //   //       done();
-  //   //     });
-  //   // });
-
-  //   // // TC-206-3: De gebruiker is niet de eigenaar van de data
-  //   // it('should return a 403 error when the user is not the owner of the data', (done) => {
-  //   //   const userId = 123; // Bestaand gebruiker ID
-  //   //   const ownerId = 456; // ID van de eigenaar van de data
-
-  //   //   chai
-  //   //     .request(server)
-  //   //     .delete(`/api/user/${userId}`)
-  //   //     .send({ ownerId })
-  //   //     .end((err, res) => {
-  //   //       res.should.have.status(403);
-  //   //       res.body.should.be.an('object');
-  //   //       res.body.should.have.property('status', 403);
-  //   //       res.body.should.have.property(
-  //   //         'message',
-  //   //         'User is not the owner of the data'
-  //   //       );
-  //   //       res.body.should.have.property('data');
-  //   //       res.body.data.should.be.an('object');
-
-  //   //       // Verifieer eventueel andere eigenschappen van de response data
-  //   //       done();
-  //   //     });
-  //   // });
-
-  //   // TC-206-4: Gebruiker succesvol verwijderd
-  //   it('should successfully delete the user', (done) => {
-  //     const userId = addedUserId; // Bestaand gebruiker ID
-
-  //     console.log("addesuserID=", addedUserId);
-  //     chai
-  //       .request(server)
-  //       .delete(`/api/user/${userId}`)
-  //       .end((err, res) => {
-  //         res.should.have.status(200);
-  //         res.body.should.be.an('object');
-  //         res.body.should.have.property('status', 200);
-  //         res.body.should.have.property('message', `User with ID ${userId} has been deleted`);
-  //         res.body.should.have.property('data');
-  //         res.body.data.should.be.an('object');
-
-  //         // Verifieer eventueel andere eigenschappen van de response data
-
-  //         done();
-  //       });
-  // });
-  // });
-
-  // describe('User API', () => {
-  //   describe('GET /users', () => {
-
-  it('should return all users', (done) => {
+  it('TC-202-1: should return all users', (done) => {
     chai
       .request(server)
       .get('/api/user')
@@ -335,7 +183,7 @@ describe('test uc-201 t/m 206', () => {
       });
   });
 
-  it('should return an error for non-existent filter fields', (done) => {
+  it('TC-202-2: should return an error for non-existent filter fields', (done) => {
     chai
       .request(server)
       .get('/api/user?id=1&nonExistentField=test')
@@ -348,7 +196,7 @@ describe('test uc-201 t/m 206', () => {
       });
   });
 
-  it('should return users with isActive=0', (done) => {
+  it('TC-202-3: should return users with isActive=0', (done) => {
     chai
       .request(server)
       .get('/api/user?isActive=0')
@@ -365,7 +213,7 @@ describe('test uc-201 t/m 206', () => {
       });
   });
 
-  it('should return users with isActive=1', (done) => {
+  it('TC-202-4: should return users with isActive=1', (done) => {
     chai
       .request(server)
       .get('/api/user?isActive=1')
@@ -382,7 +230,7 @@ describe('test uc-201 t/m 206', () => {
       });
   });
 
-  it('should return users with filters on existing fields (max 2 fields)', (done) => {
+  it('TC-202-5: should return users with filters on existing fields', (done) => {
     chai
       .request(server)
       .get('/api/user?firstName=John&lastName=Doe')
@@ -440,13 +288,6 @@ describe('test uc-201 t/m 206', () => {
         console.log('response.body.data.id,', response.body.data[0].id);
         assert.equal(response.status, 200);
         assert.equal(response.body.message, 'User getProfile endpoint');
-        //  // assert.equal(response.body.data.id, 1);
-        //   assert.equal(response.body.data.firstName, 'John32');
-        //   assert.equal(response.body.data.lastName, 'Doe32');
-        //   assert.equal(
-        //     response.body.data.emailAddress,
-        //     'm.vandullemen@server.nl'
-        //   );
 
         const expectedData = {
           id: '1',
@@ -475,9 +316,9 @@ describe('test uc-201 t/m 206', () => {
   it('TC-204-1: should return an error message and no data for an invalid token', (done) => {
     chai
       .request(server)
-      .get('/api/user/:id') // Pas de juiste route aan voor het ophalen van een gebruiker op basis van ID
-      .query({ id: 12345 }) // Pas het gewenste gebruiker-ID aan
-      .set('authorization', 'Bearer InvalidToken') // Set een ongeldige token hier
+      .get('/api/user/:id') 
+      .query({ id: 12345 }) 
+      .set('authorization', 'Bearer InvalidToken') // een ongeldige token 
       .end((err, response) => {
         assert.equal(response.status, 401);
         assert.equal(response.body.message, 'Not authorized');
@@ -503,7 +344,7 @@ describe('test uc-201 t/m 206', () => {
   it('TC-204-3: should return user data for an existing user ID', (done) => {
     chai
       .request(server)
-      .get('/api/user/2') // Pas de juiste route aan voor het ophalen van een gebruiker op basis van ID
+      .get('/api/user/2') 
       .set('authorization', 'Bearer ' + jwt.sign({ id: 1 }, jwtSecretKey))
       .end((err, response) => {
         assert.equal(response.status, 200);
@@ -594,7 +435,7 @@ describe('test uc-201 t/m 206', () => {
   it('TC-205-6: should return a success message and updated user data', (done) => {
     chai
       .request(server)
-      .put('/api/user/1') // Replace with the correct route for updating user data by ID
+      .put('/api/user/1') 
       .set('authorization', 'Bearer ' + jwt.sign({ id: 1 }, jwtSecretKey))
       .send({
         emailAdress: 'm.vandullemen@server.nl',
@@ -631,7 +472,7 @@ describe('test uc-201 t/m 206', () => {
   it('TC-206-2: should return an error message when user is not logged in', (done) => {
     chai
       .request(server)
-      .delete('/api/user/12345') // Replace with the correct route for deleting user by ID
+      .delete('/api/user/12345') 
       .end((err, response) => {
         assert.equal(response.status, 401);
         assert.equal(response.body.message, 'Authorization header missing!');
@@ -668,5 +509,4 @@ describe('test uc-201 t/m 206', () => {
         done();
       });
   });
-  //-----------------------------------------------------------------------------------------------------------------------
 });

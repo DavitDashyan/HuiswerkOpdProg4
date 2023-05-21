@@ -1,7 +1,3 @@
-// module.exports = {
-//     jwtSecretKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTY4NDUyMzU5NCwiZXhwIjoxNjg3MTE1NTk0fQ.FqsN4QhjLpjLT-YpO-fbujwcI7ynWJKTyyCchiV5q0Q'
-//   };
-
 require('dotenv').config();
 
  const loglevel = (module.exports = {

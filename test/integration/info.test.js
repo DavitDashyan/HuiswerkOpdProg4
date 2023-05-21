@@ -30,10 +30,8 @@ describe('UC-102 Informatie opvragen', function () {
       .get('/api/doesnotexist')
       .end((err, res) => {
         assert(err === null);
-
         res.body.should.be.an('object');
         let { data, message, status } = res.body;
-
         status.should.equal(404);
         message.should.be.a('string').that.is.equal('Endpoint not found');
         data.should.be.an('object');
