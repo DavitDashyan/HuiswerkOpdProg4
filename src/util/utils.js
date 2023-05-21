@@ -7,4 +7,4 @@ module.exports = {
         data.title = data.title.toUpperCase();
       }
     })
-  };
+  };  
