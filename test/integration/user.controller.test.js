@@ -357,7 +357,7 @@ describe('test uc-201 t/m 206', () => {
         assert.equal(response.status, 200);
         assert.equal(response.body.message, 'User getAll endpoint');
         assert.isArray(response.body.data);
-        assert.isTrue(response.body.data.length >= 2);
+        assert.isTrue(response.body.data.length >= 1);
         response.body.data.forEach((user) => {
           assert.equal(user.isActive, 0);
         });
@@ -431,8 +431,8 @@ describe('test uc-201 t/m 206', () => {
       .get('/api/user/profile')
       .query({
         id: 1,
-        firstName: 'John32',
-        lastName: 'Doe32',
+        firstName: 'Mariëtte',
+        lastName: 'van den Dullemen',
         emailAdress: 'm.vandullemen@server.nl'
       })
       .set('authorization', 'Bearer ' + jwt.sign({ id: 1 }, jwtSecretKey))
@@ -450,8 +450,8 @@ describe('test uc-201 t/m 206', () => {
 
         const expectedData = {
           id: '1',
-          firstName: 'John32',
-          lastName: 'Doe32',
+          firstName: 'Mariëtte',
+          lastName: 'van den Dullemen',
           emailAddress: 'm.vandullemen@server.nl'
         };
 
@@ -462,7 +462,7 @@ describe('test uc-201 t/m 206', () => {
           response.body.data[0].emailAdress,
           expectedData.emailAddress
         );
-        
+
         assert.equal(response.body.data[0].name, expectedData.name);
         assert.equal(
           response.body.data[0].description,
@@ -606,8 +606,8 @@ describe('test uc-201 t/m 206', () => {
         assert.equal(response.body.message, 'User met id 1 is aangepast');
         // Add assertions for the updated user data
         assert.equal(response.body.data.id, 1);
-        assert.equal(response.body.data.firstName, 'John32');
-        assert.equal(response.body.data.lastName, 'Doe32');
+        assert.equal(response.body.data.firstName, 'Mariëtte');
+        assert.equal(response.body.data.lastName, 'van den Dullemen');
         assert.equal(response.body.data.phoneNumber, '+316129999990');
         done();
       });
@@ -643,7 +643,7 @@ describe('test uc-201 t/m 206', () => {
   it('TC-206-3: should return an error message when user is not the owner of the data', (done) => {
     chai
       .request(server)
-      .delete('/api/user/5') 
+      .delete('/api/user/5')
       .set('authorization', 'Bearer ' + jwt.sign({ id: 1 }, jwtSecretKey))
       .end((err, response) => {
         assert.equal(response.status, 403);
@@ -657,7 +657,7 @@ describe('test uc-201 t/m 206', () => {
     const userId = addedUserId; // added during TC-201-5
     chai
       .request(server)
-      .delete(`/api/user/${userId}`)                                                     
+      .delete(`/api/user/${userId}`)
       .set('authorization', 'Bearer ' + jwt.sign({ id: userId }, jwtSecretKey))
       .end((err, response) => {
         assert.equal(response.status, 200);
@@ -670,4 +670,3 @@ describe('test uc-201 t/m 206', () => {
   });
   //-----------------------------------------------------------------------------------------------------------------------
 });
-

@@ -687,23 +687,10 @@ const controller = {
 
     const ownUserId = req.userId;
 
-    // try {
-    //   assert(userId != null, 'userId is missing');
-    //   assert(typeof userId === 'number', 'userId must be a number');
-    //   assert(userId === ownUserId, 'Not authorized');
-    // } catch (err) {
-    //   next({
-    //     status: 403,
-    //     message: err.message
-    //   });
-    //   return;
-    // }
-
     console.log('userUpdate = ', req.body, 'end body');
     console.log(
       'before if: userUpdates.phoneNumber=',
       userUpdates.phoneNumber,
-      '***'
     );
 
     if (userUpdates.phoneNumber) {
@@ -730,7 +717,7 @@ const controller = {
       return;
     }
 
-    if (userUpdates.isActive != 0 && 1) {
+    if (userUpdates.isActive != 0 && userUpdates.isActive != 1) {
       next({
         status: 400,
         message: 'isActive must be 0 or 1'
